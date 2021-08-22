@@ -9,8 +9,7 @@ function Main (props) {
     const [userDescription, setUserDescription] = React.useState()
     const [userAvatar, setUserAvatar] = React.useState('')
     const [cards, setCards] = React.useState([])
-    const [queryCards, setQueryCards] = React.useState('/cards')
-
+  
     React.useEffect(() => {
         api.getUserInfo()
             .then((userInfo) => {
@@ -18,25 +17,26 @@ function Main (props) {
                 setUserDescription(userInfo.about)
                 setUserAvatar(userInfo.avatar)
             })
+            .catch((err) => {
+                console.log(err)
+             })
 
             
-        api.getCards(queryCards)
+        api.getCards()
             .then(loadCards => {
-                
-                setCards(loadCards)
-                
+                setCards(loadCards)                
             })
-        
-            
-        
-    }, [queryCards])
+            .catch((err) => {
+                console.log(err)
+             })
+    }, [])
     
     return (
         <main className="content page__content">
 
             <section className="profile">
                 <div className="profile__avatar-box">
-                    <img src={userAvatar} alt="" className="profile__avatar" onClick={props.onEditAvatar}/>
+                    <img src={userAvatar} alt={`Фотография ${userName + ' ' + userDescription}`} className="profile__avatar" onClick={props.onEditAvatar}/>
                 </div>
                 <div className="profile__info">
                     <h1 className="profile__title">{userName}</h1>

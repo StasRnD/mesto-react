@@ -11,27 +11,18 @@ class ApiRequest {
             headers: this._headers
         })
 
-        .then((res) => {
-            if (res.ok) {
-                return res.json()
-            }
-            return Promise.reject(`Что-то пошло не так: ${res.status}`);
-        })
-        
+        .then(this._checkPesponsive)
+
     }
 
-    getCards (query) {
-        return fetch(this._url + query, {
+    getCards () {
+        return fetch(this._url + '/cards', {
             method: 'GET',
             headers: this._headers
         })
 
-        .then((res) => {
-            if (res.ok) {
-            return res.json()
-            }
-            return Promise.reject(`Что-то пошло не так: ${res.status}`);
-        })
+        .then(this._checkPesponsive)
+
     }
 
     editUserInfo (formdata) {
@@ -44,14 +35,8 @@ class ApiRequest {
               })
         })
         
-        .then((res) => {
-            if (res.ok) {
-            return res.json()
-            }
-            return Promise.reject(`Что-то пошло не так: ${res.status}`);
-        })
+        .then(this._checkPesponsive)
 
-        
     }
 
     addCard (item) {
@@ -63,13 +48,9 @@ class ApiRequest {
                 link: item.link
               })
         })
-        .then((res) => {
-            if (res.ok) {
-            return res.json()
-            }
-            return Promise.reject(`Что-то пошло не так: ${res.status}`);
-        })
-       
+
+        .then(this._checkPesponsive)
+
     }
 
     addLike (id) {
@@ -80,15 +61,8 @@ class ApiRequest {
             headers: this._headers
         })
 
-        .then((res) => {
-            if (res.ok) {
-            return res.json()
-            }
-            return Promise.reject(`Что-то пошло не так: ${res.status}`);
-        })
-        
+        .then(this._checkPesponsive)
 
-        
     }
 
     deleteLike (id) {
@@ -96,13 +70,8 @@ class ApiRequest {
             method: 'DELETE',
             headers: this._headers
         })
-        .then((res) => {
-            if (res.ok) {
-            return res.json()
-            }
-            return Promise.reject(`Что-то пошло не так: ${res.status}`);
-        })
 
+        .then(this._checkPesponsive)
     }
 
     editAvatar (data) {
@@ -114,14 +83,7 @@ class ApiRequest {
               })
         })
 
-        .then((res) => {
-            if (res.ok) {
-            return res.json()
-            }
-            return Promise.reject(`Что-то пошло не так: ${res.status}`);
-        })
-        
-        
+        .then(this._checkPesponsive)        
     }
 
     deleteCard(id) {
@@ -129,12 +91,15 @@ class ApiRequest {
             method: 'DELETE',
             headers: this._headers
         })
-        .then((res) => {
-            if (res.ok) {
+
+        .then(this._checkPesponsive)
+    }
+
+    _checkPesponsive(res) {
+        if (res.ok) {
             return res.json()
             }
             return Promise.reject(`Что-то пошло не так: ${res.status}`);
-        })
     }
 }
 
