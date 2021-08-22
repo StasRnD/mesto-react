@@ -1,0 +1,10 @@
+.popup__container_card_card-in-popup {
+    box-sizing: border-box;
+    box-shadow: unset;
+    position: relative;
+    background-color: transparent;
+    width: unset;
+    max-width: unset;
+    border-radius: unset;
+    margin: 0 auto;  
+}
