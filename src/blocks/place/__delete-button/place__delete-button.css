@@ -12,4 +12,8 @@
 
 .place__delete-button:hover {
     cursor: pointer;
+    
+}
+.place__delete-button-hidden {
+    visibility: hidden;
 }

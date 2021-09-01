@@ -31,7 +31,7 @@ class ApiRequest {
             headers: this._headers,
             body: JSON.stringify({
                 name: formdata.name,
-                about: formdata.profession
+                about: formdata.about
               })
         })
         
@@ -53,27 +53,7 @@ class ApiRequest {
 
     }
 
-    addLike (id) {
-        
-        return fetch(this._url + `/cards/likes/${id}`, {
-            
-            method: 'PUT',
-            headers: this._headers
-        })
-
-        .then(this._checkPesponsive)
-
-    }
-
-    deleteLike (id) {
-        return fetch(this._url + `/cards/likes/${id}`, {
-            method: 'DELETE',
-            headers: this._headers
-        })
-
-        .then(this._checkPesponsive)
-    }
-
+    
     editAvatar (data) {
         return fetch(this._url + `/users/me/avatar`, {
             method: 'PATCH',
@@ -89,6 +69,16 @@ class ApiRequest {
     deleteCard(id) {
         return fetch(this._url + `/cards/${id}`, {
             method: 'DELETE',
+            headers: this._headers
+        })
+
+        .then(this._checkPesponsive)
+    }
+
+    changeLikeCardStatus(id, isLiked) {
+        return fetch(this._url + `/cards/likes/${id}`, {
+            
+            method: isLiked ? 'PUT' : 'DELETE',
             headers: this._headers
         })
 
