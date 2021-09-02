@@ -24,8 +24,14 @@ function App() {
         
       
     React.useEffect(() => {
-        api.getUserInfo()
-            .then((userInfo) => setCurrentUser(userInfo))
+        Promise.all([
+            api.getUserInfo(),
+            api.getCards()
+        ])
+            .then(([userInfo, loadCards]) => {
+                setCurrentUser(userInfo);
+                setCards(loadCards)
+            })
             .catch(err => console.log(err))
             
         function handleCloseEscape (evt) {
@@ -33,13 +39,13 @@ function App() {
                 closeAllPopups()
             } 
         }
-
-        api.getCards()
-            .then(loadCards =>  setCards(loadCards))
-            .catch(err => console.log(err))
-                   
+                  
         document.addEventListener('keydown', handleCloseEscape);
 
+        return () => {
+            document.removeEventListener('keydown', handleCloseEscape); 
+        }
+            
     }, [])
 
 
@@ -47,28 +53,29 @@ function App() {
         setIsEditProfilePopupOpen(false);
         setIsAddPlacePopupOpen(false);
         setIsEditAvatarPopupOpen(false);
-        setSelectedCard(false)
-        setIsDeleteCardPopup(false)
+        setIsDeleteCardPopup(false);
+        setSelectedCard(null);
+        setSelectedDeleteCard(null);        
     }
 
 
     function handleClickDeleteCardButton (item) {
-        setIsDeleteCardPopup(!isDeleteCardPopup)
+        setIsDeleteCardPopup(true)
         setSelectedDeleteCard(item)
     }
 
     function handleEditAvatarClick() {
-        setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen)
+        setIsEditAvatarPopupOpen(true)
     }
 
 
     function handleEditProfileClick() {
-        setIsEditProfilePopupOpen(!isEditProfilePopupOpen)
+        setIsEditProfilePopupOpen(true)
     }
 
 
     function handleAddPlaceClick()  {
-        setIsAddPlacePopupOpen(!isAddPlacePopupOpen)
+        setIsAddPlacePopupOpen(true)
     }
 
 
@@ -78,7 +85,7 @@ function App() {
 
 
     function closePopupClickOverlay (evt) {
-        if (evt.target.classList.contains('popup_opened')) {
+        if (evt.target === evt.currentTarget) {
             closeAllPopups()
         }
     }
@@ -88,10 +95,9 @@ function App() {
         api.editUserInfo(formdata)
             .then((userInfo) => {
                 setCurrentUser(userInfo)
+                closeAllPopups()
         })
         .catch(err => console.log(err))
-
-        closeAllPopups()
     }
 
 
@@ -99,10 +105,9 @@ function App() {
         api.editAvatar(formdata)
             .then((userAvatar) => {
                 setCurrentUser(userAvatar)
+                closeAllPopups()
         })
         .catch(err => console.log(err))
-
-        closeAllPopups()
     }
 
 
@@ -110,12 +115,10 @@ function App() {
         api.addCard(item)
             .then((newCard) => {
                 setCards([newCard, ...cards])
+                closeAllPopups()
             })
             .catch(err => console.log(err))
-
-        closeAllPopups()
     }
-
 
     function handleCardLike (card) {
         const isLiked = card.likes.some(userLiked => userLiked._id === currentUser._id);
@@ -131,10 +134,10 @@ function App() {
     function handleDeleteCard (card) {
         api.deleteCard(card._id)
             .then(() => {
-                setCards((cards) => cards.filter(elementFromCards => elementFromCards._id !== card._id));
+                setCards((cards) => cards.filter(elementFromCards => elementFromCards._id !== card._id))
+                closeAllPopups()
         })
             .catch(err => console.log(err))
-        closeAllPopups()
     }
     
     
@@ -178,8 +181,7 @@ return (
             closePopupClickOverlay = {closePopupClickOverlay}
             onAddPlace = {handleAddPlaceSubmit}
         />
-        
-        
+           
 
        <DeleteCardPopup 
             closePopupClickOverlay={closePopupClickOverlay}
