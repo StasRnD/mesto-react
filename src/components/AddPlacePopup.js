@@ -19,7 +19,7 @@ function AddPlacePopup (props) {
         props.onAddPlace({
             name,
             link,
-        })
+        });
         setName('')
         setLink('')
     }
