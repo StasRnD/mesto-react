@@ -1,7 +1,7 @@
 import React from 'react';
 import { UserContext } from '../contexts/CurrentUserContext.js';
 
-function Card ({item, onCardClick, onCardLike, onCardDelete}) {
+function Card ({item, onCardClick, onCardLike, onClickDeleteCardButton, setSelectedCard}) {
     const currentUser = React.useContext(UserContext);
 
     const isOwn = item.owner._id === currentUser._id;
@@ -15,15 +15,14 @@ function Card ({item, onCardClick, onCardLike, onCardDelete}) {
         onCardLike(item)
     }
 
-    const handleDeleteCard = () => {
-        onCardDelete(item)
+    const handleDeleteButton = () => {
+        onClickDeleteCardButton(item)
     }
 
-
-
+    
     return (
         <article className="place">
-            <button type="button" aria-label="Удалить карточку" className={`place__delete-button ${!isOwn ? 'place__delete-button-hidden' : ''} `} onClick={handleDeleteCard}></button>
+            <button type="button" aria-label="Удалить карточку" className={`place__delete-button ${!isOwn ? 'place__delete-button-hidden' : ''} `} onClick={handleDeleteButton}></button>
             <img src={item.link} alt={item.name} className="place__foto" onClick={handleCardClick}/>
             <div className="place__description">
                 <h2 className="place__title">{item.name}</h2>
